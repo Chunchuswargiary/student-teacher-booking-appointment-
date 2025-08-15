@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student-Teacher Appointment System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landingPage" class="page active">
+        <div class="container">
+            <div class="landing-header">
+                <h1>Student-Teacher Appointment System</h1>
+                <p>Connect, Schedule, and Collaborate</p>
+            </div>
+            <div class="role-selection">
+                <div class="role-card" onclick="showLogin('admin')">
+                    <div class="role-icon">👨‍💼</div>
+                    <h3>Admin</h3>
+                    <p>Manage system and users</p>
+                </div>
+                <div class="role-card" onclick="showLogin('teacher')">
+                    <div class="role-icon">👩‍🏫</div>
+                    <h3>Teacher</h3>
+                    <p>Manage appointments and availability</p>
+                </div>
+                <div class="role-card" onclick="showLogin('student')">
+                    <div class="role-icon">👨‍🎓</div>
+                    <h3>Student</h3>
+                    <p>Book appointments with teachers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="page">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <button class="back-btn" onclick="showLanding()">&larr; Back</button>
+                    <h2 id="loginTitle">Login</h2>
+                </div>
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+                </form>
+                <div class="auth-links">
+                    <span id="registerLink" class="link" onclick="showRegister()">Need to register as Student?</span>
+                    <span class="demo-info">Demo Login: admin@demo.com / password</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="registerPage" class="page">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <button class="back-btn" onclick="showLogin('student')">&larr; Back to Login</button>
+                    <h2>Student Registration</h2>
+                </div>
+                <form id="registerForm" class="auth-form">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="regName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="regEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" id="regPhone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Department</label>
+                        <select id="regDepartment" class="form-control" required>
+                            <option value="">Select Department</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Biology">Biology</option>
+                            <option value="English">English</option>
+                            <option value="History">History</option>
+                            <option value="Economics">Economics</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="regPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">Register</button>
+                </form>
+                <div class="auth-note">
+                    <p>Note: Registration requires admin approval before you can login</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="page">
+        <nav class="navbar">
+            <div class="nav-brand">Admin Dashboard</div>
+            <div class="nav-menu">
+                <span id="adminUserName">Admin</span>
+                <button class="btn btn--outline btn--sm" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+        <div class="container dashboard">
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="showTab('teachers')">Teachers</button>
+                <button class="tab-btn" onclick="showTab('students')">Students</button>
+                <button class="tab-btn" onclick="showTab('appointments')">Appointments</button>
+                <button class="tab-btn" onclick="showTab('reports')">Reports</button>
+            </div>
+
+            <!-- Teachers Tab -->
+            <div id="teachersTab" class="tab-content active">
+                <div class="section-header">
+                    <h3>Manage Teachers</h3>
+                    <button class="btn btn--primary" onclick="showAddTeacherModal()">Add Teacher</button>
+                </div>
+                <div id="teachersGrid" class="data-grid"></div>
+            </div>
+
+            <!-- Students Tab -->
+            <div id="studentsTab" class="tab-content">
+                <div class="section-header">
+                    <h3>Student Registrations</h3>
+                </div>
+                <div id="studentsGrid" class="data-grid"></div>
+            </div>
+
+            <!-- Appointments Tab -->
+            <div id="appointmentsTab" class="tab-content">
+                <div class="section-header">
+                    <h3>All Appointments</h3>
+                </div>
+                <div id="appointmentsGrid" class="data-grid"></div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reportsTab" class="tab-content">
+                <div class="section-header">
+                    <h3>System Reports</h3>
+                </div>
+                <div class="reports-container">
+                    <div class="report-card">
+                        <h4>System Statistics</h4>
+                        <div id="statsContent" class="stats-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher Dashboard -->
+    <div id="teacherDashboard" class="page">
+        <nav class="navbar">
+            <div class="nav-brand">Teacher Dashboard</div>
+            <div class="nav-menu">
+                <span id="teacherUserName">Teacher</span>
+                <button class="btn btn--outline btn--sm" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+        <div class="container dashboard">
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="showTeacherTab('schedule')">Schedule</button>
+                <button class="tab-btn" onclick="showTeacherTab('appointments')">Appointments</button>
+                <button class="tab-btn" onclick="showTeacherTab('messages')">Messages</button>
+            </div>
+
+            <!-- Schedule Tab -->
+            <div id="scheduleTab" class="tab-content active">
+                <div class="section-header">
+                    <h3>Set Availability</h3>
+                    <button class="btn btn--primary" onclick="showAvailabilityModal()">Update Schedule</button>
+                </div>
+                <div id="scheduleGrid" class="schedule-grid"></div>
+            </div>
+
+            <!-- Teacher Appointments Tab -->
+            <div id="teacherAppointmentsTab" class="tab-content">
+                <div class="section-header">
+                    <h3>My Appointments</h3>
+                </div>
+                <div id="teacherAppointmentsGrid" class="data-grid"></div>
+            </div>
+
+            <!-- Teacher Messages Tab -->
+            <div id="teacherMessagesTab" class="tab-content">
+                <div class="section-header">
+                    <h3>Messages</h3>
+                </div>
+                <div id="teacherMessagesGrid" class="messages-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="studentDashboard" class="page">
+        <nav class="navbar">
+            <div class="nav-brand">Student Dashboard</div>
+            <div class="nav-menu">
+                <span id="studentUserName">Student</span>
+                <button class="btn btn--outline btn--sm" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+        <div class="container dashboard">
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="showStudentTab('book')">Book Appointment</button>
+                <button class="tab-btn" onclick="showStudentTab('appointments')">My Appointments</button>
+                <button class="tab-btn" onclick="showStudentTab('messages')">Messages</button>
+            </div>
+
+            <!-- Book Appointment Tab -->
+            <div id="bookTab" class="tab-content active">
+                <div class="section-header">
+                    <h3>Book Appointment</h3>
+                </div>
+                <div class="booking-container">
+                    <div class="search-filters">
+                        <div class="filter-group">
+                            <label class="form-label">Department</label>
+                            <select id="departmentFilter" class="form-control">
+                                <option value="">All Departments</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="form-label">Subject</label>
+                            <input type="text" id="subjectFilter" class="form-control" placeholder="Search by subject">
+                        </div>
+                        <button class="btn btn--secondary" onclick="filterTeachers()">Search</button>
+                    </div>
+                    <div id="teachersForBooking" class="teachers-grid"></div>
+                </div>
+            </div>
+
+            <!-- Student Appointments Tab -->
+            <div id="studentAppointmentsTab" class="tab-content">
+                <div class="section-header">
+                    <h3>My Appointments</h3>
+                </div>
+                <div id="studentAppointmentsGrid" class="data-grid"></div>
+            </div>
+
+            <!-- Student Messages Tab -->
+            <div id="studentMessagesTab" class="tab-content">
+                <div class="section-header">
+                    <h3>Messages</h3>
+                </div>
+                <div id="studentMessagesGrid" class="messages-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Teacher Modal -->
+    <div id="addTeacherModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Teacher</h3>
+                <button class="close-btn" onclick="closeModal('addTeacherModal')">&times;</button>
+            </div>
+            <form id="addTeacherForm" class="modal-form">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" id="teacherName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="teacherEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" id="teacherPhone" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Department</label>
+                    <select id="teacherDepartment" class="form-control" required>
+                        <option value="">Select Department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Subjects</label>
+                    <input type="text" id="teacherSubjects" class="form-control" placeholder="e.g., JavaScript, Python" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--outline" onclick="closeModal('addTeacherModal')">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Add Teacher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Book Appointment Modal -->
+    <div id="bookAppointmentModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="bookingModalTitle">Book Appointment</h3>
+                <button class="close-btn" onclick="closeModal('bookAppointmentModal')">&times;</button>
+            </div>
+            <form id="bookAppointmentForm" class="modal-form">
+                <div class="form-group">
+                    <label class="form-label">Date</label>
+                    <input type="date" id="appointmentDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Time</label>
+                    <select id="appointmentTime" class="form-control" required>
+                        <option value="">Select Time</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Purpose</label>
+                    <input type="text" id="appointmentPurpose" class="form-control" placeholder="Brief description" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Message</label>
+                    <textarea id="appointmentMessage" class="form-control" rows="3" placeholder="Additional details"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--outline" onclick="closeModal('bookAppointmentModal')">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Book Appointment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Availability Modal -->
+    <div id="availabilityModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Set Availability</h3>
+                <button class="close-btn" onclick="closeModal('availabilityModal')">&times;</button>
+            </div>
+            <form id="availabilityForm" class="modal-form">
+                <div class="availability-grid">
+                    <div class="day-schedule">
+                        <h4>Monday</h4>
+                        <input type="time" id="mondayStart" class="form-control">
+                        <input type="time" id="mondayEnd" class="form-control">
+                    </div>
+                    <div class="day-schedule">
+                        <h4>Tuesday</h4>
+                        <input type="time" id="tuesdayStart" class="form-control">
+                        <input type="time" id="tuesdayEnd" class="form-control">
+                    </div>
+                    <div class="day-schedule">
+                        <h4>Wednesday</h4>
+                        <input type="time" id="wednesdayStart" class="form-control">
+                        <input type="time" id="wednesdayEnd" class="form-control">
+                    </div>
+                    <div class="day-schedule">
+                        <h4>Thursday</h4>
+                        <input type="time" id="thursdayStart" class="form-control">
+                        <input type="time" id="thursdayEnd" class="form-control">
+                    </div>
+                    <div class="day-schedule">
+                        <h4>Friday</h4>
+                        <input type="time" id="fridayStart" class="form-control">
+                        <input type="time" id="fridayEnd" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn--outline" onclick="closeModal('availabilityModal')">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Save Schedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading hidden">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Toast Messages -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
